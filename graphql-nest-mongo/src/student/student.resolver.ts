@@ -7,15 +7,15 @@ import { CreateStudentInput } from './create-student.input';
 export class StudentResolver {
   constructor(private studentService: StudentService) {}
 
-  //   @Query(() => [LessonType])
-  //   getAllLessons() {
-  //     return this.lessonService.getAllLessons();
-  //   }
+  @Query(() => [StudentType])
+  getAllStudents() {
+    return this.studentService.getAllStudents();
+  }
 
-  //   @Query(() => LessonType)
-  //   lesson(@Args('id') id: string) {
-  //     return this.lessonService.getLesson(id);
-  //   }
+  @Query(() => StudentType)
+  getStudent(@Args('id') id: string) {
+    return this.studentService.getStudent(id);
+  }
 
   @Mutation(() => StudentType)
   // We are naming this with @Args('createLessonInput', then typing it)
