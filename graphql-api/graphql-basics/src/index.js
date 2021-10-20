@@ -1,29 +1,41 @@
 import { GraphQLServer } from "graphql-yoga";
 
+// -Scalar Types-
+// String
+// Boolean
+// Int
+// Float
+// ID - used to represent unique indentifiers
+
 // type definitions (schema)
 const typeDefs = `
     type Query {
-        hello: String!
-        name: String!
-        location: String!
-        bio: String!
+
+        title: String!
+        price: Float!
+        releaseYear: Int
+        rating: Float
+        inStock: Boolean!
     }
 `;
 
 // Resolvers
 const resolvers = {
   Query: {
-    hello() {
-      return `Hello from GQL!!!`;
+    title() {
+      return "Divide";
     },
-    name() {
-      return `Hello, this is matt!`;
+    price() {
+      return 19.99;
     },
-    location() {
-      return `I'm located in Mayer, MN`;
+    releaseYear() {
+      return null;
     },
-    bio() {
-      return `I enjoy family time and the outdoors`;
+    rating() {
+      return 10;
+    },
+    inStock() {
+      return true;
     },
   },
 };
