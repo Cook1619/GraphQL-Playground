@@ -11,6 +11,8 @@ import { GraphQLServer } from "graphql-yoga";
 const typeDefs = `
     type Query {
         me: User!
+
+        post: Post!
     }
 
     type User {
@@ -18,6 +20,13 @@ const typeDefs = `
         name: String!
         email: String!
         age: Int
+    }
+
+    type Post {
+        id: ID!
+        title: String!
+        body: String!
+        published: Boolean!
     }
 `;
 
@@ -30,6 +39,14 @@ const resolvers = {
         name: "Matt",
         email: "cook3465@gmail.com",
         age: 34,
+      };
+    },
+    post() {
+      return {
+        id: "123dfg",
+        title: "GraphQL Course",
+        body: "This is a course on learning GQL",
+        published: true,
       };
     },
   },
