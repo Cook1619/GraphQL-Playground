@@ -10,8 +10,9 @@ import { GraphQLServer } from "graphql-yoga";
 // type definitions (schema)
 const typeDefs = `
     type Query {
+        greeting(name: String): String!
+        add(num1: Float!, num2: Float!): Float!
         me: User!
-
         post: Post!
     }
 
@@ -48,6 +49,18 @@ const resolvers = {
         body: "This is a course on learning GQL",
         published: true,
       };
+    },
+    greeting(parent, args, ctx, info) {
+      if (args.name) {
+        return `Hello ${args.name}!`;
+      } else {
+        return "Hello!";
+      }
+    },
+    add(parent, args) {
+      if (args.num1 && args.num2) {
+        return args.num1 + args.num2;
+      }
     },
   },
 };
