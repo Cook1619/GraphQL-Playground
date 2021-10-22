@@ -11,9 +11,10 @@ import { GraphQLServer } from "graphql-yoga";
 const typeDefs = `
     type Query {
         greeting(name: String): String!
-        add(num1: Float!, num2: Float!): Float!
+        add(numbers: [Float!]): Float!
         me: User!
         post: Post!
+        grades: [Int]!
     }
 
     type User {
@@ -58,9 +59,14 @@ const resolvers = {
       }
     },
     add(parent, args) {
-      if (args.num1 && args.num2) {
-        return args.num1 + args.num2;
+      if (args.numbers.length) {
+        return args.numbers.reduce((a, b) => a + b);
+      } else {
+        return 0;
       }
+    },
+    grades(parent, args, ctx, info) {
+      return [10, 55, 67, 89, 99];
     },
   },
 };
