@@ -7,14 +7,42 @@ import { GraphQLServer } from "graphql-yoga";
 // Float
 // ID - used to represent unique indentifiers
 
+// Dummy Data
+
+const users = [
+  { id: "1", name: "Matt", email: "matt@gmail.com", age: 34 },
+  { id: "2", name: "Danelle", email: "danelle@gmail.com", age: 36 },
+  { id: "3", name: "Kali", email: "kali@gmail.com" },
+];
+
+const posts = [
+  {
+    id: "1",
+    title: "GraphQl Course",
+    body: "This is an awesome course",
+    published: true,
+  },
+  {
+    id: "2",
+    title: "Node Course",
+    body: "This is a tut on nodejs",
+    published: true,
+  },
+  {
+    id: "3",
+    title: "React Course",
+    body: "This is the best library",
+    published: false,
+  },
+];
+
 // type definitions (schema)
 const typeDefs = `
     type Query {
-        greeting(name: String): String!
-        add(numbers: [Float!]): Float!
+        users(query: String): [User!]!
+        posts(query: String): [Post!]!
         me: User!
         post: Post!
-        grades: [Int]!
     }
 
     type User {
@@ -35,6 +63,26 @@ const typeDefs = `
 // Resolvers
 const resolvers = {
   Query: {
+    users(parent, args, ctx, info) {
+      if (!args.query) {
+        return users;
+      } else {
+        return users.filter((user) =>
+          user.name.toLowerCase().includes(args.query.toLowerCase())
+        );
+      }
+    },
+    posts(parent, args, ctx, info) {
+      if (!args.query) {
+        return posts;
+      } else {
+        return posts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(args.query.toLowerCase()) ||
+            post.body.toLowerCase().includes(args.query.toLowerCase())
+        );
+      }
+    },
     me() {
       return {
         id: "123asd",
@@ -50,23 +98,6 @@ const resolvers = {
         body: "This is a course on learning GQL",
         published: true,
       };
-    },
-    greeting(parent, args, ctx, info) {
-      if (args.name) {
-        return `Hello ${args.name}!`;
-      } else {
-        return "Hello!";
-      }
-    },
-    add(parent, args) {
-      if (args.numbers.length) {
-        return args.numbers.reduce((a, b) => a + b);
-      } else {
-        return 0;
-      }
-    },
-    grades(parent, args, ctx, info) {
-      return [10, 55, 67, 89, 99];
     },
   },
 };
