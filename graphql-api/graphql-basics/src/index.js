@@ -17,21 +17,21 @@ const users = [
 
 const posts = [
   {
-    id: "1",
+    id: "10",
     title: "GraphQl Course",
     body: "This is an awesome course",
     published: true,
     author: "1",
   },
   {
-    id: "2",
+    id: "11",
     title: "Node Course",
     body: "This is a tut on nodejs",
     published: true,
     author: "1",
   },
   {
-    id: "3",
+    id: "12",
     title: "React Course",
     body: "This is the best library",
     published: false,
@@ -39,11 +39,19 @@ const posts = [
   },
 ];
 
+const comments = [
+  { id: "21", text: "This is the first comment" },
+  { id: "22", text: "This is the second comment" },
+  { id: "23", text: "This is the third comment" },
+  { id: "24", text: "This is the fourth comment" },
+];
+
 // type definitions (schema)
 const typeDefs = `
     type Query {
         users(query: String): [User!]!
         posts(query: String): [Post!]!
+        comments: [Comment!]!
         me: User!
         post: Post!
     }
@@ -62,6 +70,10 @@ const typeDefs = `
         body: String!
         published: Boolean!
         author: User!
+    }
+    type Comment {
+      id: ID!
+      text: String!
     }
 `;
 
@@ -87,6 +99,9 @@ const resolvers = {
             post.body.toLowerCase().includes(args.query.toLowerCase())
         );
       }
+    },
+    comments(parent, args, context, info) {
+      return comments;
     },
     me() {
       return {
