@@ -21,18 +21,21 @@ const posts = [
     title: "GraphQl Course",
     body: "This is an awesome course",
     published: true,
+    author: "1",
   },
   {
     id: "2",
     title: "Node Course",
     body: "This is a tut on nodejs",
     published: true,
+    author: "1",
   },
   {
     id: "3",
     title: "React Course",
     body: "This is the best library",
     published: false,
+    author: "2",
   },
 ];
 
@@ -57,6 +60,7 @@ const typeDefs = `
         title: String!
         body: String!
         published: Boolean!
+        author: User!
     }
 `;
 
@@ -98,6 +102,11 @@ const resolvers = {
         body: "This is a course on learning GQL",
         published: true,
       };
+    },
+  },
+  Post: {
+    author(parent, args, context, info) {
+      return users.find((user) => user.id === parent.author);
     },
   },
 };
