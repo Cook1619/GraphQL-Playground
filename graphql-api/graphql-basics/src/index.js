@@ -40,10 +40,10 @@ const posts = [
 ];
 
 const comments = [
-  { id: "21", text: "This is the first comment", author: "1" },
-  { id: "22", text: "This is the second comment", author: "2" },
-  { id: "23", text: "This is the third comment", author: "2" },
-  { id: "24", text: "This is the fourth comment", author: "1" },
+  { id: "21", text: "This is the first comment", author: "1", post: "10" },
+  { id: "22", text: "This is the second comment", author: "2", post: "10" },
+  { id: "23", text: "This is the third comment", author: "2", post: "11" },
+  { id: "24", text: "This is the fourth comment", author: "1", post: "12" },
 ];
 
 // type definitions (schema)
@@ -71,11 +71,13 @@ const typeDefs = `
         body: String!
         published: Boolean!
         author: User!
+        comments: [Comment]!
     }
     type Comment {
-      id: ID!
-      text: String!
-      author: User!
+        id: ID!
+        text: String!
+        author: User!
+        post: Post!
     }
 `;
 
@@ -126,6 +128,9 @@ const resolvers = {
     author(parent, args, context, info) {
       return users.find((user) => user.id === parent.author);
     },
+    comments(parent, args, context, info) {
+      return comments.filter((comment) => comment.post === parent.id);
+    },
   },
   User: {
     posts(parent, args, context, info) {
@@ -138,6 +143,9 @@ const resolvers = {
   Comment: {
     author(parent, args, context, info) {
       return users.find((user) => user.id === parent.author);
+    },
+    post(parent, args, context, info) {
+      return posts.find((post) => post.id === parent.post);
     },
   },
 };
