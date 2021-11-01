@@ -1,4 +1,5 @@
 import { GraphQLServer } from "graphql-yoga";
+import { v4 as uuidv4 } from "uuid";
 
 // -Scalar Types-
 // String
@@ -54,6 +55,10 @@ const typeDefs = `
         comments: [Comment!]!
         me: User!
         post: Post!
+    }
+
+    type Mutation {
+      createUser(name: String!, email: String!, age: Int): User!
     }
 
     type User {
@@ -122,6 +127,24 @@ const resolvers = {
         body: "This is a course on learning GQL",
         published: true,
       };
+    },
+  },
+  Mutation: {
+    createUser(parent, args, context, info) {
+      const emailTaken = users.some((user) => user.email === args.email);
+      if (emailTaken) {
+        throw new Error("Email is already in use.");
+      }
+      const user = {
+        id: uuidv4(),
+        name: args.name,
+        email: args.email,
+        age: args.age,
+      };
+
+      users.push(user);
+
+      return user;
     },
   },
   Post: {
