@@ -10,13 +10,13 @@ import { v4 as uuidv4 } from "uuid";
 
 // Dummy Data
 
-const users = [
+let users = [
   { id: "1", name: "Matt", email: "matt@gmail.com", age: 34 },
   { id: "2", name: "Danelle", email: "danelle@gmail.com", age: 36 },
   { id: "3", name: "Kali", email: "kali@gmail.com" },
 ];
 
-const posts = [
+let posts = [
   {
     id: "10",
     title: "GraphQl Course",
@@ -40,7 +40,7 @@ const posts = [
   },
 ];
 
-const comments = [
+let comments = [
   { id: "21", text: "This is the first comment", author: "1", post: "10" },
   { id: "22", text: "This is the second comment", author: "2", post: "10" },
   { id: "23", text: "This is the third comment", author: "2", post: "11" },
@@ -59,6 +59,7 @@ const typeDefs = `
 
     type Mutation {
       createUser(data: CreateUserInput!): User!
+      deleteUser(id: ID!): User!
       createPost(data: CreatePostInput!): Post!
       createComment(data: CreateCommentInput!): Comment!
     }
@@ -164,6 +165,23 @@ const resolvers = {
       users.push(user);
 
       return user;
+    },
+    deleteUser(parent, args, context, info) {
+      const userIndex = users.findIndex((user) => user.id === args.id);
+      if (userIndex === -1) {
+        throw new Error("User not found");
+      }
+      const deletedUsers = users.splice(userIndex, 1);
+      posts = posts.filter((post) => {
+        const match = post.author === args.id;
+        if (match) {
+          comments = comments.filter((comment) => comment.post !== post.id);
+        }
+        return !match;
+      });
+      comments = comments.filter((comment) => comment.author !== args.id);
+
+      return deletedUsers[0];
     },
     createPost(parent, args, context, info) {
       const userExists = users.some((user) => user.id === args.data.author);
